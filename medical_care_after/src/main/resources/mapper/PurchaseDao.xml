@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.PurchaseDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.Purchase">
+    <id column="pu_id" jdbcType="INTEGER" property="puId" />
+    <result column="pu_order_id" jdbcType="VARCHAR" property="puOrderId" />
+    <result column="pu_price" jdbcType="DECIMAL" property="puPrice" />
+    <result column="pu_unit" jdbcType="VARCHAR" property="puUnit" />
+    <result column="pu_number" jdbcType="INTEGER" property="puNumber" />
+    <result column="pu_amout_payable" jdbcType="DECIMAL" property="puAmoutPayable" />
+    <result column="pu_amount_paid" jdbcType="DECIMAL" property="puAmountPaid" />
+    <result column="pu_amout_arear" jdbcType="DECIMAL" property="puAmoutArear" />
+    <result column="pu_time" jdbcType="DATE" property="puTime" />
+    <result column="pu_in_status" jdbcType="INTEGER" property="puInStatus" />
+    <result column="pu_transactor" jdbcType="VARCHAR" property="puTransactor" />
+    <result column="pu_operator" jdbcType="VARCHAR" property="puOperator" />
+    <result column="pu_note" jdbcType="VARCHAR" property="puNote" />
+    <result column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="supp_id" jdbcType="INTEGER" property="suppId" />
+    <association property="shop" javaType="com.trkj.medical_care_after.entity.Shop">
+      <id column="sid" jdbcType="INTEGER" property="sid" />
+      <result column="sname" jdbcType="VARCHAR" property="sname" />
+      <result column="shop_number" jdbcType="INTEGER" property="shopNumber" />
+      <result column="price" jdbcType="DECIMAL" property="price" />
+      <result column="company" jdbcType="VARCHAR" property="company" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </association>
+    <association property="supplier" javaType="com.trkj.medical_care_after.entity.Supplier">
+      <id column="Supp_Id" jdbcType="INTEGER" property="suppId" />
+      <result column="Supplier_Id" jdbcType="VARCHAR" property="supplierId" />
+      <result column="SupplierName" jdbcType="VARCHAR" property="suppliername" />
+      <result column="LiaisonMan" jdbcType="VARCHAR" property="liaisonman" />
+      <result column="SuPhone" jdbcType="VARCHAR" property="suphone" />
+      <result column="Address" jdbcType="VARCHAR" property="address" />
+      <result column="Remarks" jdbcType="VARCHAR" property="remarks" />
+    </association>
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="com.trkj.medical_care_after.vo.statistics">
+    <result column="sums"  jdbcType="INTEGER" property="sums" />
+    <result column="amout"  jdbcType="INTEGER" property="amout" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+    <result column="shop_number" jdbcType="INTEGER" property="shopNumber" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+  </resultMap>
+  <sql id="Base_Column_List_1">
+    p.pu_id, p.pu_order_id, p.pu_price, p.pu_unit, p.pu_number, p.pu_amout_payable, p.pu_amount_paid,
+    p.pu_amout_arear, p.pu_time, p.pu_in_status, p.pu_transactor, p.pu_operator, p.pu_note, p.sid,
+    p.supp_id
+  </sql>
+  <sql id="Base_Column_List_2">
+    s.sid, s.sname, s.shop_number, s.price, s.company, s.remarks
+  </sql>
+  <sql id="Base_Column_List_3">
+    u.Supp_Id, u.Supplier_Id, u.SupplierName, u.LiaisonMan, u.SuPhone, u.Address
+  </sql>
+
+  <!--查询进货登记数据-->
+  <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List_1" />,<include refid="Base_Column_List_2" />,<include refid="Base_Column_List_3" />
+    from purchase p
+    left join shop s on p.sid=s.sid
+    left join supplier u on u.Supp_Id = p.supp_id
+  </select>
+
+  <!--添加进货记录-->
+  <insert id="insert" keyColumn="pu_id" keyProperty="puId" parameterType="com.trkj.medical_care_after.entity.Purchase" useGeneratedKeys="true">
+    insert into purchase (pu_order_id, pu_price, pu_unit, 
+      pu_number, pu_amout_payable, pu_amount_paid, 
+      pu_amout_arear, pu_time, pu_in_status, 
+      pu_transactor, pu_operator, pu_note, 
+      sid,supp_id)
+    values (#{puOrderId,jdbcType=VARCHAR}, #{puPrice,jdbcType=DECIMAL}, #{puUnit,jdbcType=VARCHAR}, 
+      #{puNumber,jdbcType=INTEGER}, #{puAmoutPayable,jdbcType=DECIMAL}, #{puAmountPaid,jdbcType=DECIMAL}, 
+      #{puAmoutArear,jdbcType=DECIMAL}, #{puTime,jdbcType=DATE},0,
+      #{puTransactor,jdbcType=VARCHAR}, #{puOperator,jdbcType=VARCHAR}, #{puNote,jdbcType=VARCHAR}, 
+      #{sid,jdbcType=INTEGER},#{suppId,jdbcType=INTEGER})
+  </insert>
+
+  <!--根据进货单号删除数据-->
+  <delete id="deleteByOrderId" parameterType="String">
+    delete from purchase
+    where pu_order_id= #{puOrderId}
+  </delete>
+
+  <!--动态sql修改-->
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.Purchase">
+    update purchase
+    <set>
+      <if test="puPrice != null">
+        pu_price = #{puPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="puUnit != null">
+        pu_unit = #{puUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="puNumber != null">
+        pu_number = #{puNumber,jdbcType=INTEGER},
+      </if>
+      <if test="puAmoutPayable != null">
+        pu_amout_payable = #{puAmoutPayable,jdbcType=DECIMAL},
+      </if>
+      <if test="puAmountPaid != null">
+        pu_amount_paid = #{puAmountPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="puAmoutArear != null">
+        pu_amout_arear = #{puAmoutArear,jdbcType=DECIMAL},
+      </if>
+      <if test="puTime != null">
+        pu_time = #{puTime,jdbcType=DATE},
+      </if>
+      <if test="puInStatus != null">
+        pu_in_status = #{puInStatus,jdbcType=INTEGER},
+      </if>
+      <if test="puTransactor != null">
+        pu_transactor = #{puTransactor,jdbcType=VARCHAR},
+      </if>
+      <if test="puOperator != null">
+        pu_operator = #{puOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="puNote != null">
+        pu_note = #{puNote,jdbcType=VARCHAR},
+      </if>
+      <if test="sid != null">
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="suppId != null">
+        supp_id = #{suppId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pu_order_id = #{puOrderId,jdbcType=VARCHAR}
+  </update>
+  <!--多条件查询-->
+  <select id="conditionQuery"   parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List_1" />,<include refid="Base_Column_List_2" />,<include refid="Base_Column_List_3" />
+    from purchase as p
+    left join shop as s on p.sid=s.sid
+    left join supplier as u on u.Supp_Id = p.supp_id
+    <where>
+      1=1
+      <if test="snames!='' and snames!=null">
+        and s.sname=#{snames}
+      </if>
+      <if test="suppliername!= '' and suppliername !=null">
+        and u.suppliername=#{suppliername}
+      </if>
+    </where>
+  </select>
+
+  <!--采购统计-->
+  <select id="statisticsfind" resultMap="BaseResultMap2">
+    select p.sid,SUM(p.pu_number) sums,SUM(p.pu_amout_payable) amout,s.* from purchase p
+    left join shop s on s.sid=p.sid
+    GROUP BY p.sid
+  </select>
+</mapper>
