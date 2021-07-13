@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.InventoryDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.Inventory">
+    <id column="in_id" jdbcType="INTEGER" property="inId" />
+    <result column="in_supplier" jdbcType="VARCHAR" property="inSupplier" />
+    <result column="in_upperlimit" jdbcType="INTEGER" property="inUpperlimit" />
+    <result column="in_lowerlimit" jdbcType="INTEGER" property="inLowerlimit" />
+    <result column="in_describe" jdbcType="VARCHAR" property="inDescribe" />
+    <result column="in_original" jdbcType="INTEGER" property="inOriginal" />
+    <result column="in_stock" jdbcType="INTEGER" property="inStock" />
+    <result column="in_reportedloss" jdbcType="INTEGER" property="inReportedloss" />
+    <result column="in_sales" jdbcType="INTEGER" property="inSales" />
+    <result column="in_receipt_return" jdbcType="INTEGER" property="inReceiptReturn" />
+    <result column="in_quantity" jdbcType="INTEGER" property="inQuantity" />
+    <result column="in_state" jdbcType="CHAR" property="inState" />
+    <result column="in_proid" jdbcType="INTEGER" property="inProid" />
+    <association property="shop" javaType="com.trkj.medical_care_after.entity.Shop">
+      <id column="sid" jdbcType="INTEGER" property="sid"></id>
+      <result column="shop_number" jdbcType="VARCHAR" property="shopNumber"></result>
+      <result column="sname" jdbcType="VARCHAR" property="sname"></result>
+      <result column="company" jdbcType="VARCHAR" property="company"></result>
+    </association>
+    <association property="returnFrmloss" javaType="com.trkj.medical_care_after.entity.ReturnFrmloss">
+      <id column="rfid" jdbcType="INTEGER" property="rfid"></id>
+      <result column="quantity" jdbcType="INTEGER" property="quantity"></result>
+    </association>
+    <association property="deliveryid" javaType="com.trkj.medical_care_after.entity.Deliveryid">
+      <id column="did" jdbcType="INTEGER" property="did"></id>
+      <result column="quantity" jdbcType="INTEGER" property="quantity"></result>
+    </association>
+    <association property="sale" javaType="com.trkj.medical_care_after.entity.Sale">
+      <id column="said" jdbcType="INTEGER" property="said"></id>
+      <result column="quantity" jdbcType="INTEGER" property="quantity"></result>
+    </association>
+    <association property="purchase" javaType="com.trkj.medical_care_after.entity.Purchase">
+      <id column="puid" jdbcType="INTEGER" property="puId"></id>
+      <result column="pu_order_id" jdbcType="VARCHAR" property="puOrderId"></result>
+      <result column="pu_number" jdbcType="INTEGER" property="puNumber"></result>
+    </association>
+    <association property="salesReturn" javaType="com.trkj.medical_care_after.entity.SalesReturn">
+      <id column="reid" jdbcType="INTEGER" property="reId"></id>
+      <result column="re_number" jdbcType="INTEGER" property="reNumber"></result>
+    </association>
+    <association property="supplier" javaType="com.trkj.medical_care_after.entity.Supplier">
+      <id column="suppid" jdbcType="INTEGER" property="suppId"></id>
+      <result column="supplierName" jdbcType="VARCHAR" property="suppliername"></result>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    in_id, in_supplier, in_upperlimit, in_lowerlimit, in_describe, in_original, in_stock, 
+    in_reportedloss, in_sales, in_receipt_return, in_quantity, in_state, in_proid
+  </sql>
+  <select id="selectByPrimaryKey" resultType="java.util.Map">
+    select in_id,in_supplier,in_upperlimit,in_lowerlimit,in_describe,in_state
+    from inventory
+    where in_id = #{inId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inventory
+    where in_id = #{inId,jdbcType=INTEGER}
+  </delete>
+  <select id="selectDetail" resultType="java.util.Map">
+   select a.in_id,a.in_upperlimit,a.in_lowerlimit,b.shop_number,b.sname,b.company,
+    p.pu_number-s.re_number-d.quantity-r.quantity-l.quantity in_quantity,
+    a.in_describe,a.in_state, c.SupplierName
+    from shop b
+    INNER JOIN inventory a on a.in_proid=b.sid
+    INNER JOIN purchase p on a.in_proid=p.sid
+    INNER JOIN sales_return s on p.pu_order_id=s.pu_order_id
+    INNER JOIN supplier c on s.Supp_Id=c.Supp_Id
+    INNER JOIN deliveryid d on a.in_proid=d.sid
+    INNER JOIN return_frmloss r on a.in_proid=r.sid
+    INNER JOIN sale l on a.in_proid=l.sid
+  </select>
+  <update id="updateById">
+    update inventory set
+    in_supplier=#{inSupplier,jdbcType=VARCHAR}, in_upperlimit=#{inUpperlimit,jdbcType=INTEGER},
+    in_lowerlimit=#{inLowerlimit,jdbcType=INTEGER},in_describe=#{inDescribe,jdbcType=VARCHAR},
+    in_original=#{inOriginal,jdbcType=INTEGER}, in_stock=#{inStock,jdbcType=INTEGER},
+    in_reportedloss=#{inReportedloss,jdbcType=INTEGER}, in_sales=#{inSales,jdbcType=INTEGER},
+    in_receipt_return=#{inReceiptReturn,jdbcType=INTEGER},in_quantity=#{inQuantity,jdbcType=INTEGER},
+    in_state=#{inState,jdbcType=CHAR},in_proid=#{inProid,jdbcType=INTEGER}
+    where in_id= #{inId,jdbcType=INTEGER}
+  </update>
+  <select id="selectUpper" resultType="java.util.Map">
+    select a.in_id,a.in_upperlimit,a.in_lowerlimit,b.shop_number,b.sname,b.company,
+    p.pu_number-s.re_number-d.quantity-r.quantity-l.quantity in_quantity,
+    a.in_describe,a.in_state, c.SupplierName
+    from shop b
+    INNER JOIN inventory a on a.in_proid=b.sid
+    INNER JOIN purchase p on a.in_proid=p.sid
+    INNER JOIN sales_return s on p.pu_order_id=s.pu_order_id
+    INNER JOIN supplier c on s.Supp_Id=c.Supp_Id
+    INNER JOIN deliveryid d on a.in_proid=d.sid
+    INNER JOIN return_frmloss r on a.in_proid=r.sid
+    INNER JOIN sale l on a.in_proid=l.sid
+    where a.in_state=1
+  </select>
+  <select id="selectLower" resultType="java.util.Map">
+    select a.in_id,a.in_upperlimit,a.in_lowerlimit,b.shop_number,b.sname,b.company,
+    p.pu_number-s.re_number-d.quantity-r.quantity-l.quantity in_quantity,
+    a.in_describe,a.in_state, c.SupplierName
+    from shop b
+    INNER JOIN inventory a on a.in_proid=b.sid
+    INNER JOIN purchase p on a.in_proid=p.sid
+    INNER JOIN sales_return s on p.pu_order_id=s.pu_order_id
+    INNER JOIN supplier c on s.Supp_Id=c.Supp_Id
+    INNER JOIN deliveryid d on a.in_proid=d.sid
+    INNER JOIN return_frmloss r on a.in_proid=r.sid
+    INNER JOIN sale l on a.in_proid=l.sid
+    where a.in_state=2
+  </select>
+</mapper>

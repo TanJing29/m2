@@ -1,0 +1,45 @@
+{
+                path: "/inventory",
+                name: "inventory",
+                meta: {
+                    title: '商品库存'
+                },
+                component: () => import ( /* webpackChunkName: "charts" */ "../views/hdd/inventory.vue")
+            },{
+                path: "/upperlimit",
+                name: "upperlimit",
+                meta: {
+                    title: '超储提醒'
+                },
+                component: () => import ( /* webpackChunkName: "charts" */ "../views/hdd/upperlimit.vue")
+            },{
+                path: "/lowerlimit",
+                name: "lowerlimit",
+                meta: {
+                    title: '缺货提醒'
+                },
+                component: () => import ( /* webpackChunkName: "charts" */ "../views/hdd/lowerlimit.vue")
+            }
+
+
+
+
+
+{
+				icon: "el-icon-lx-calendar",
+				index: "3",
+				title: "库存管理",
+				subs: [{
+						index: "/inventory",
+						title: "商品库存",
+					},
+					{
+						index: "/upperlimit",
+						title: "超储提醒",
+					},
+					{
+						index: "/lowerlimit",
+						title: "缺货提醒",
+					},
+				]
+			}
