@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.AccountsReceivableDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.AccountsReceivable">
+    <id column="ar_id" jdbcType="INTEGER" property="arId" />
+    <result column="ar_stime" jdbcType="TIMESTAMP" property="arStime" />
+    <result column="Connection_Name" jdbcType="VARCHAR" property="connectionName" />
+    <result column="Con_Id" jdbcType="INTEGER" property="conId" />
+    <result column="ar_owe" jdbcType="DECIMAL" property="arOwe" />
+    <result column="ar_payment" jdbcType="DECIMAL" property="arPayment" />
+    <result column="ar_owes" jdbcType="DECIMAL" property="arOwes" />
+    <result column="ar_agent" jdbcType="VARCHAR" property="arAgent" />
+    <result column="ar_remarks" jdbcType="VARCHAR" property="arRemarks" />
+    <result column="ar_operator" jdbcType="VARCHAR" property="arOperator" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ar_id, ar_stime, `Connection_Name`, Con_Id, ar_owe, ar_payment, ar_owes, ar_agent, 
+    ar_remarks, ar_operator
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from accounts_receivable
+    where ar_id = #{arId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from accounts_receivable
+    where ar_id = #{arId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ar_id" keyProperty="arId" parameterType="com.trkj.medical_care_after.entity.AccountsReceivable" useGeneratedKeys="true">
+    insert into accounts_receivable (ar_stime, `Connection_Name`, Con_Id, 
+      ar_owe, ar_payment, ar_owes, 
+      ar_agent, ar_remarks, ar_operator
+      )
+    values (#{arStime,jdbcType=TIMESTAMP}, #{connectionName,jdbcType=VARCHAR}, #{conId,jdbcType=INTEGER}, 
+      #{arOwe,jdbcType=DECIMAL}, #{arPayment,jdbcType=DECIMAL}, #{arOwes,jdbcType=DECIMAL}, 
+      #{arAgent,jdbcType=VARCHAR}, #{arRemarks,jdbcType=VARCHAR}, #{arOperator,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="ar_id" keyProperty="arId" parameterType="com.trkj.medical_care_after.entity.AccountsReceivable" useGeneratedKeys="true">
+    insert into accounts_receivable
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="arStime != null">
+        ar_stime,
+      </if>
+      <if test="connectionName != null">
+        `Connection_Name`,
+      </if>
+      <if test="conId != null">
+        Con_Id,
+      </if>
+      <if test="arOwe != null">
+        ar_owe,
+      </if>
+      <if test="arPayment != null">
+        ar_payment,
+      </if>
+      <if test="arOwes != null">
+        ar_owes,
+      </if>
+      <if test="arAgent != null">
+        ar_agent,
+      </if>
+      <if test="arRemarks != null">
+        ar_remarks,
+      </if>
+      <if test="arOperator != null">
+        ar_operator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="arStime != null">
+        #{arStime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="connectionName != null">
+        #{connectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="conId != null">
+        #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="arOwe != null">
+        #{arOwe,jdbcType=DECIMAL},
+      </if>
+      <if test="arPayment != null">
+        #{arPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="arOwes != null">
+        #{arOwes,jdbcType=DECIMAL},
+      </if>
+      <if test="arAgent != null">
+        #{arAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="arRemarks != null">
+        #{arRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="arOperator != null">
+        #{arOperator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.AccountsReceivable">
+    update accounts_receivable
+    <set>
+      <if test="arStime != null">
+        ar_stime = #{arStime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="connectionName != null">
+        `Connection_Name` = #{connectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="conId != null">
+        Con_Id = #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="arOwe != null">
+        ar_owe = #{arOwe,jdbcType=DECIMAL},
+      </if>
+      <if test="arPayment != null">
+        ar_payment = #{arPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="arOwes != null">
+        ar_owes = #{arOwes,jdbcType=DECIMAL},
+      </if>
+      <if test="arAgent != null">
+        ar_agent = #{arAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="arRemarks != null">
+        ar_remarks = #{arRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="arOperator != null">
+        ar_operator = #{arOperator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ar_id = #{arId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.entity.AccountsReceivable">
+    update accounts_receivable
+    set ar_stime = #{arStime,jdbcType=TIMESTAMP},
+      `Connection_Name` = #{connectionName,jdbcType=VARCHAR},
+      Con_Id = #{conId,jdbcType=INTEGER},
+      ar_owe = #{arOwe,jdbcType=DECIMAL},
+      ar_payment = #{arPayment,jdbcType=DECIMAL},
+      ar_owes = #{arOwes,jdbcType=DECIMAL},
+      ar_agent = #{arAgent,jdbcType=VARCHAR},
+      ar_remarks = #{arRemarks,jdbcType=VARCHAR},
+      ar_operator = #{arOperator,jdbcType=VARCHAR}
+    where ar_id = #{arId,jdbcType=INTEGER}
+  </update>
+  <select id="findAllccr" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from accounts_receivable
+  </select>
+</mapper>

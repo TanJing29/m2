@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.ReturnFrmlossDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.ReturnFrmloss">
+    <id column="rfid" jdbcType="INTEGER" property="rfid" />
+    <result column="Con_Id" jdbcType="INTEGER" property="conId" />
+    <result column="did" jdbcType="INTEGER" property="did" />
+    <result column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="amount_money" jdbcType="DECIMAL" property="amountMoney" />
+    <result column="rf_reason" jdbcType="VARCHAR" property="rfReason" />
+    <result column="rf_date" jdbcType="DATE" property="rfDate" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <association property="deliveryid" javaType="com.trkj.medical_care_after.entity.Deliveryid">
+      <id column="did" jdbcType="INTEGER" property="did" />
+      <result column="sid" jdbcType="INTEGER" property="sid" />
+      <result column="Con_Id" jdbcType="INTEGER" property="conId" />
+      <result column="said" jdbcType="INTEGER" property="said" />
+      <result column="delivery_order_no" jdbcType="VARCHAR" property="deliveryOrderNo" />
+      <result column="price" jdbcType="DECIMAL" property="price" />
+      <result column="quantity" jdbcType="INTEGER" property="quantity" />
+      <result column="amount_receivable" jdbcType="DECIMAL" property="amountReceivable" />
+      <result column="actual_money" jdbcType="DECIMAL" property="actualMoney" />
+      <result column="owe_money" jdbcType="DECIMAL" property="oweMoney" />
+      <result column="state" jdbcType="INTEGER" property="state" />
+      <result column="ddate" jdbcType="DATE" property="ddate" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </association>
+    <association property="shop" javaType="com.trkj.medical_care_after.entity.Shop">
+      <id column="sid" jdbcType="INTEGER" property="sid" />
+      <result column="sname" jdbcType="VARCHAR" property="sname" />
+      <result column="shop_number" jdbcType="VARCHAR" property="shopNumber" />
+      <result column="price" jdbcType="DECIMAL" property="price" />
+      <result column="company" jdbcType="VARCHAR" property="company" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </association>
+    <association property="connection" javaType="com.trkj.medical_care_after.entity.Connection">
+      <id column="Con_Id" jdbcType="INTEGER" property="conId" />
+      <result column="Connection_Id" jdbcType="VARCHAR" property="connectionId" />
+      <result column="Connection_Name" jdbcType="VARCHAR" property="connectionName" />
+      <result column="LiaisonMan" jdbcType="VARCHAR" property="liaisonman" />
+      <result column="Phone" jdbcType="VARCHAR" property="phone" />
+      <result column="Address" jdbcType="VARCHAR" property="address" />
+      <result column="Remarks" jdbcType="VARCHAR" property="remarks" />
+      <result column="Addname" jdbcType="VARCHAR" property="addname" />
+      <result column="AddTime" jdbcType="TIMESTAMP" property="addtime" />
+      <result column="UpdateName" jdbcType="VARCHAR" property="updatename" />
+      <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
+      <result column="DeleteName" jdbcType="VARCHAR" property="deletename" />
+      <result column="DeleteTime" jdbcType="TIMESTAMP" property="deletetime" />
+      <result column="TimeLiness" jdbcType="INTEGER" property="timeliness" />
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    rfid, Con_Id, did, sid, quantity, price, amount_money, rf_reason, rf_date, remarks
+  </sql>
+  <sql id="Base_Column_List_1">
+    rf.rfid,  rf.Con_Id,  rf.did,  rf.sid,  rf.quantity,  rf.price,  rf.amount_money,  rf.rf_reason,  rf.rf_date,  rf.remarks
+  </sql>
+  <sql id="Base_Column_List_2">
+    s.sid, s.sname, s.shop_number, s.price, s.company, s.remarks
+  </sql>
+  <sql id="Base_Column_List_3">
+    d.did, d.sid, d.Con_Id, d.said, d.delivery_order_no, d.price, d.quantity, d.amount_receivable, d.actual_money,
+    d.owe_money, d.`state`, d.ddate, d.remarks
+  </sql>
+  <sql id="Base_Column_List_4">
+    co.Con_Id,  co.Connection_Id,  co.`Connection_Name`,  co.LiaisonMan,  co.Phone,  co.Address,  co.Remarks,  co.Addname,
+     co.AddTime,  co.UpdateName,  co.UpdateTime,  co.DeleteName,  co.DeleteTime,  co.TimeLiness
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from return_frmloss
+    where rfid = #{rfid,jdbcType=INTEGER}
+  </select>
+  <select id="findPageRet"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List_1" />,<include refid="Base_Column_List_2" />,<include refid="Base_Column_List_3" />,<include refid="Base_Column_List_4" />
+    from return_frmloss rf
+    left join shop s on rf.sid=s.sid
+    left join deliveryid d on d.did=rf.did
+    left join `connection` co on rf.Con_Id=co.Con_Id
+    <where>
+      <if test="index=='Connection_Name'  and value!=null and value!=''">
+        co.Connection_Name like concat('%',concat(#{value},'%'))
+      </if>
+      <if test="index=='sname'  and value!=null and value!=''">
+        s.sname like concat('%',concat(#{value},'%'))
+      </if>
+    </where>
+    order by rf.rfid desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from return_frmloss
+    where rfid = #{rfid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="rfid" keyProperty="rfid" parameterType="com.trkj.medical_care_after.entity.ReturnFrmloss" useGeneratedKeys="true">
+    insert into return_frmloss (Con_Id, did, sid, 
+      quantity, price, amount_money, 
+      rf_reason, rf_date, remarks
+      )
+    values (#{conId,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, 
+      #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{amountMoney,jdbcType=DECIMAL}, 
+      #{rfReason,jdbcType=VARCHAR}, #{rfDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="rfid" keyProperty="rfid" parameterType="com.trkj.medical_care_after.entity.ReturnFrmloss" useGeneratedKeys="true">
+    insert into return_frmloss
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="conId != null">
+        Con_Id,
+      </if>
+      <if test="did != null">
+        did,
+      </if>
+      <if test="sid != null">
+        sid,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="amountMoney != null">
+        amount_money,
+      </if>
+      <if test="rfReason != null">
+        rf_reason,
+      </if>
+      <if test="rfDate != null">
+        rf_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="conId != null">
+        #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null">
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amountMoney != null">
+        #{amountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="rfReason != null">
+        #{rfReason,jdbcType=VARCHAR},
+      </if>
+      <if test="rfDate != null">
+        #{rfDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.ReturnFrmloss">
+    update return_frmloss
+    <set>
+      <if test="conId != null">
+        Con_Id = #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        did = #{did,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null">
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amountMoney != null">
+        amount_money = #{amountMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="rfReason != null">
+        rf_reason = #{rfReason,jdbcType=VARCHAR},
+      </if>
+      <if test="rfDate != null">
+        rf_date = #{rfDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rfid = #{rfid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.entity.ReturnFrmloss">
+    update return_frmloss
+    set Con_Id = #{conId,jdbcType=INTEGER},
+      did = #{did,jdbcType=INTEGER},
+      sid = #{sid,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      amount_money = #{amountMoney,jdbcType=DECIMAL},
+      rf_reason = #{rfReason,jdbcType=VARCHAR},
+      rf_date = #{rfDate,jdbcType=DATE},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where rfid = #{rfid,jdbcType=INTEGER}
+  </update>
+</mapper>

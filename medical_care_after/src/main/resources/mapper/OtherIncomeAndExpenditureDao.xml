@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.OtherIncomeAndExpenditureDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.OtherIncomeAndExpenditure">
+    <id column="otr_id" jdbcType="INTEGER" property="otrId" />
+    <result column="otr_time" jdbcType="TIMESTAMP" property="otrTime" />
+    <result column="otr_project" jdbcType="VARCHAR" property="otrProject" />
+    <result column="otr_money" jdbcType="DECIMAL" property="otrMoney" />
+    <result column="otr_settlement" jdbcType="VARCHAR" property="otrSettlement" />
+    <result column="otr_remarks" jdbcType="VARCHAR" property="otrRemarks" />
+    <result column="otr_agent" jdbcType="VARCHAR" property="otrAgent" />
+    <result column="otr_operator" jdbcType="VARCHAR" property="otrOperator" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    otr_id, otr_time, otr_project, otr_money, otr_settlement, otr_remarks, otr_agent, 
+    otr_operator
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from other_income_and_expenditure
+    where otr_id = #{otrId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from other_income_and_expenditure
+    where otr_id = #{otrId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="otr_id" keyProperty="otrId" parameterType="com.trkj.medical_care_after.entity.OtherIncomeAndExpenditure" useGeneratedKeys="true">
+    insert into other_income_and_expenditure (otr_time, otr_project, otr_money, 
+      otr_settlement, otr_remarks, otr_agent, 
+      otr_operator)
+    values (#{otrTime,jdbcType=TIMESTAMP}, #{otrProject,jdbcType=VARCHAR}, #{otrMoney,jdbcType=DECIMAL}, 
+      #{otrSettlement,jdbcType=VARCHAR}, #{otrRemarks,jdbcType=VARCHAR}, #{otrAgent,jdbcType=VARCHAR}, 
+      #{otrOperator,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="otr_id" keyProperty="otrId" parameterType="com.trkj.medical_care_after.entity.OtherIncomeAndExpenditure" useGeneratedKeys="true">
+    insert into other_income_and_expenditure
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="otrTime != null">
+        otr_time,
+      </if>
+      <if test="otrProject != null">
+        otr_project,
+      </if>
+      <if test="otrMoney != null">
+        otr_money,
+      </if>
+      <if test="otrSettlement != null">
+        otr_settlement,
+      </if>
+      <if test="otrRemarks != null">
+        otr_remarks,
+      </if>
+      <if test="otrAgent != null">
+        otr_agent,
+      </if>
+      <if test="otrOperator != null">
+        otr_operator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="otrTime != null">
+        #{otrTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="otrProject != null">
+        #{otrProject,jdbcType=VARCHAR},
+      </if>
+      <if test="otrMoney != null">
+        #{otrMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="otrSettlement != null">
+        #{otrSettlement,jdbcType=VARCHAR},
+      </if>
+      <if test="otrRemarks != null">
+        #{otrRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="otrAgent != null">
+        #{otrAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="otrOperator != null">
+        #{otrOperator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.OtherIncomeAndExpenditure">
+    update other_income_and_expenditure
+    <set>
+      <if test="otrTime != null">
+        otr_time = #{otrTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="otrProject != null">
+        otr_project = #{otrProject,jdbcType=VARCHAR},
+      </if>
+      <if test="otrMoney != null">
+        otr_money = #{otrMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="otrSettlement != null">
+        otr_settlement = #{otrSettlement,jdbcType=VARCHAR},
+      </if>
+      <if test="otrRemarks != null">
+        otr_remarks = #{otrRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="otrAgent != null">
+        otr_agent = #{otrAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="otrOperator != null">
+        otr_operator = #{otrOperator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where otr_id = #{otrId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.entity.OtherIncomeAndExpenditure">
+    update other_income_and_expenditure
+    set otr_time = #{otrTime,jdbcType=TIMESTAMP},
+      otr_project = #{otrProject,jdbcType=VARCHAR},
+      otr_money = #{otrMoney,jdbcType=DECIMAL},
+      otr_settlement = #{otrSettlement,jdbcType=VARCHAR},
+      otr_remarks = #{otrRemarks,jdbcType=VARCHAR},
+      otr_agent = #{otrAgent,jdbcType=VARCHAR},
+      otr_operator = #{otrOperator,jdbcType=VARCHAR}
+    where otr_id = #{otrId,jdbcType=INTEGER}
+  </update>
+  <select id="findAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from other_income_and_expenditure
+  </select>
+</mapper>

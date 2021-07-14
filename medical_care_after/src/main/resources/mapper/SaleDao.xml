@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.SaleDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.Sale">
+    <id column="said" jdbcType="INTEGER" property="said" />
+    <result column="Con_Id" jdbcType="INTEGER" property="conId" />
+    <result column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="sales_order_no" jdbcType="VARCHAR" property="salesOrderNo" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="amount_receivable" jdbcType="DECIMAL" property="amountReceivable" />
+    <result column="actual_money" jdbcType="DECIMAL" property="actualMoney" />
+    <result column="owe_money" jdbcType="DECIMAL" property="oweMoney" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="sale_date" jdbcType="DATE" property="saleDate" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <association property="shop" javaType="com.trkj.medical_care_after.entity.Shop">
+      <id column="sid" jdbcType="INTEGER" property="sid" />
+      <result column="sname" jdbcType="VARCHAR" property="sname" />
+      <result column="shop_number" jdbcType="VARCHAR" property="shopNumber" />
+      <result column="price" jdbcType="DECIMAL" property="price" />
+      <result column="company" jdbcType="VARCHAR" property="company" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </association>
+    <association property="connection" javaType="com.trkj.medical_care_after.entity.Connection">
+      <id column="Con_Id" jdbcType="INTEGER" property="conId" />
+      <result column="Connection_Id" jdbcType="VARCHAR" property="connectionId" />
+      <result column="Connection_Name" jdbcType="VARCHAR" property="connectionName" />
+      <result column="LiaisonMan" jdbcType="VARCHAR" property="liaisonman" />
+      <result column="Phone" jdbcType="VARCHAR" property="phone" />
+      <result column="Address" jdbcType="VARCHAR" property="address" />
+      <result column="Remarks" jdbcType="VARCHAR" property="remarks" />
+      <result column="Addname" jdbcType="VARCHAR" property="addname" />
+      <result column="AddTime" jdbcType="TIMESTAMP" property="addtime" />
+      <result column="UpdateName" jdbcType="VARCHAR" property="updatename" />
+      <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
+      <result column="DeleteName" jdbcType="VARCHAR" property="deletename" />
+      <result column="DeleteTime" jdbcType="TIMESTAMP" property="deletetime" />
+      <result column="TimeLiness" jdbcType="INTEGER" property="timeliness" />
+    </association>
+  </resultMap>
+  <resultMap id="SaleVo" type="com.trkj.medical_care_after.vo.SaleVo">
+    <result column="Connection_Name" jdbcType="VARCHAR" property="connectionName" />
+    <result column="sname" jdbcType="VARCHAR" property="sname" />
+    <result column="shop_number" jdbcType="VARCHAR" property="shopNumber" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="amount_receivable" jdbcType="DECIMAL" property="amountReceivable" />
+    <result column="actual_money" jdbcType="DECIMAL" property="actualMoney" />
+    <result column="owe_money" jdbcType="DECIMAL" property="oweMoney" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    said, Con_Id, sid, sales_order_no, quantity, price, amount_receivable, actual_money, 
+    owe_money, `state`, sale_date, remarks
+  </sql>
+  <sql id="Base_Column_List_2">
+    s.sid, s.sname, s.shop_number, s.price, s.company, s.remarks
+  </sql>
+  <sql id="Base_Column_List_3">
+    sa.said, sa.Con_Id, sa.sid, sa.sales_order_no, sa.quantity, sa.price, sa.amount_receivable, sa.actual_money,
+    sa.owe_money, sa.`state`, sa.sale_date, sa.remarks
+  </sql>
+  <sql id="Base_Column_List_4">
+    co.Con_Id,  co.Connection_Id,  co.`Connection_Name`,  co.LiaisonMan,  co.Phone,  co.Address,  co.Remarks,  co.Addname,
+     co.AddTime,  co.UpdateName,  co.UpdateTime,  co.DeleteName,  co.DeleteTime,  co.TimeLiness
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sale
+    where said = #{said,jdbcType=INTEGER}
+  </select>
+  <select id="findAllSale" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sale where state=0
+  </select>
+  <select id="findSaletj" resultType="com.trkj.medical_care_after.vo.SaleVo">
+    select co.Connection_Name, s.sname, s.price, s.shop_number, sum(sa.quantity) quantity,s.company, sum(sa.amount_receivable) amount_receivable,sum(actual_money) actual_money,sum(owe_money) owe_money from sale sa
+        left join shop s on sa.sid=s.sid
+        left join `connection` co on sa.Con_id=co.Con_id
+    <where>
+      <if test="index =='sids'">
+        DATE_SUB(CURDATE(), INTERVAL 1 DAY) <![CDATA[<= ]]> date(sa.sale_date)
+      </if>
+      <if test="index =='qwe'">
+        DATE_SUB(CURDATE(), INTERVAL 7 DAY) <![CDATA[<= ]]> date(sa.sale_date)
+      </if>
+      <if test="index =='rty'">
+        DATE_SUB(CURDATE(), INTERVAL 1 MONTH) <![CDATA[<= ]]> date(sa.sale_date)
+      </if>
+    </where>
+    GROUP by s.sid , co.Connection_Name , sa.sale_date
+  </select>
+  <select id="findPageSale" resultMap="BaseResultMap">
+    select sa.*,s.*,co.* from sale sa
+     left join `connection` co on sa.Con_Id=co.Con_Id
+     left join shop s on sa.sid=s.sid
+    <where>
+      <if test="index =='sname'  and value!=null and value!=''">
+        s.sname like concat('%',concat(#{value},'%'))
+      </if>
+      <if test="index =='Connection_Name'  and value!=null and value!=''">
+        co.Connection_Name like concat('%',concat(#{value},'%'))
+      </if>
+      <if test="index =='state'">
+        and sa.state =0
+      </if>
+    </where>
+    order by sa.said desc
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sale
+    where said = #{said,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="said" keyProperty="said" parameterType="com.trkj.medical_care_after.entity.Sale" useGeneratedKeys="true">
+    insert into sale (Con_Id, sid, sales_order_no, 
+      quantity, price, amount_receivable, 
+      actual_money, owe_money, `state`, 
+      sale_date, remarks)
+    values (#{conId,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{salesOrderNo,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{amountReceivable,jdbcType=DECIMAL}, 
+      #{actualMoney,jdbcType=DECIMAL}, #{oweMoney,jdbcType=DECIMAL}, #{state,jdbcType=INTEGER}, 
+      #{saleDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="said" keyProperty="said" parameterType="com.trkj.medical_care_after.entity.Sale" useGeneratedKeys="true">
+    insert into sale
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="conId != null">
+        Con_Id,
+      </if>
+      <if test="sid != null">
+        sid,
+      </if>
+      <if test="salesOrderNo != null">
+        sales_order_no,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="amountReceivable != null">
+        amount_receivable,
+      </if>
+      <if test="actualMoney != null">
+        actual_money,
+      </if>
+      <if test="oweMoney != null">
+        owe_money,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="saleDate != null">
+        sale_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="conId != null">
+        #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null">
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="salesOrderNo != null">
+        #{salesOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amountReceivable != null">
+        #{amountReceivable,jdbcType=DECIMAL},
+      </if>
+      <if test="actualMoney != null">
+        #{actualMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="oweMoney != null">
+        #{oweMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="saleDate != null">
+        #{saleDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.Sale">
+    update sale
+    <set>
+      <if test="conId != null">
+        Con_Id = #{conId,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null">
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="salesOrderNo != null">
+        sales_order_no = #{salesOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="amountReceivable != null">
+        amount_receivable = #{amountReceivable,jdbcType=DECIMAL},
+      </if>
+      <if test="actualMoney != null">
+        actual_money = #{actualMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="oweMoney != null">
+        owe_money = #{oweMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="saleDate != null">
+        sale_date = #{saleDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where said = #{said,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.entity.Sale">
+    update sale
+    set
+      `state` = #{state,jdbcType=INTEGER}
+    where said = #{said,jdbcType=INTEGER}
+  </update>
+
+</mapper>

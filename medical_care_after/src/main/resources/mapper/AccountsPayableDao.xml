@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.AccountsPayableDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.entity.AccountsPayable">
+    <id column="ap_id" jdbcType="INTEGER" property="apId" />
+    <result column="ap_stime" jdbcType="TIMESTAMP" property="apStime" />
+    <result column="SupplierName" jdbcType="VARCHAR" property="suppliername" />
+    <result column="Supp_Id" jdbcType="INTEGER" property="suppId" />
+    <result column="ap_owe" jdbcType="DECIMAL" property="apOwe" />
+    <result column="ap_payment" jdbcType="DECIMAL" property="apPayment" />
+    <result column="ap_owes" jdbcType="DECIMAL" property="apOwes" />
+    <result column="ap_agent" jdbcType="VARCHAR" property="apAgent" />
+    <result column="ap_remarks" jdbcType="VARCHAR" property="apRemarks" />
+    <result column="ap_operator" jdbcType="VARCHAR" property="apOperator" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ap_id, ap_stime, SupplierName, Supp_Id, ap_owe, ap_payment, ap_owes, ap_agent, ap_remarks, 
+    ap_operator
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from accounts_payable
+    where ap_id = #{apId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from accounts_payable
+    where ap_id = #{apId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ap_id" keyProperty="apId" parameterType="com.trkj.medical_care_after.entity.AccountsPayable" useGeneratedKeys="true">
+    insert into accounts_payable (ap_stime, SupplierName, Supp_Id, 
+      ap_owe, ap_payment, ap_owes, 
+      ap_agent, ap_remarks, ap_operator
+      )
+    values (#{apStime,jdbcType=TIMESTAMP}, #{suppliername,jdbcType=VARCHAR}, #{suppId,jdbcType=INTEGER}, 
+      #{apOwe,jdbcType=DECIMAL}, #{apPayment,jdbcType=DECIMAL}, #{apOwes,jdbcType=DECIMAL}, 
+      #{apAgent,jdbcType=VARCHAR}, #{apRemarks,jdbcType=VARCHAR}, #{apOperator,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="ap_id" keyProperty="apId" parameterType="com.trkj.medical_care_after.entity.AccountsPayable" useGeneratedKeys="true">
+    insert into accounts_payable
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="apStime != null">
+        ap_stime,
+      </if>
+      <if test="suppliername != null">
+        SupplierName,
+      </if>
+      <if test="suppId != null">
+        Supp_Id,
+      </if>
+      <if test="apOwe != null">
+        ap_owe,
+      </if>
+      <if test="apPayment != null">
+        ap_payment,
+      </if>
+      <if test="apOwes != null">
+        ap_owes,
+      </if>
+      <if test="apAgent != null">
+        ap_agent,
+      </if>
+      <if test="apRemarks != null">
+        ap_remarks,
+      </if>
+      <if test="apOperator != null">
+        ap_operator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="apStime != null">
+        #{apStime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suppliername != null">
+        #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="suppId != null">
+        #{suppId,jdbcType=INTEGER},
+      </if>
+      <if test="apOwe != null">
+        #{apOwe,jdbcType=DECIMAL},
+      </if>
+      <if test="apPayment != null">
+        #{apPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="apOwes != null">
+        #{apOwes,jdbcType=DECIMAL},
+      </if>
+      <if test="apAgent != null">
+        #{apAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="apRemarks != null">
+        #{apRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="apOperator != null">
+        #{apOperator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.entity.AccountsPayable">
+    update accounts_payable
+    <set>
+      <if test="apStime != null">
+        ap_stime = #{apStime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suppliername != null">
+        SupplierName = #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="suppId != null">
+        Supp_Id = #{suppId,jdbcType=INTEGER},
+      </if>
+      <if test="apOwe != null">
+        ap_owe = #{apOwe,jdbcType=DECIMAL},
+      </if>
+      <if test="apPayment != null">
+        ap_payment = #{apPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="apOwes != null">
+        ap_owes = #{apOwes,jdbcType=DECIMAL},
+      </if>
+      <if test="apAgent != null">
+        ap_agent = #{apAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="apRemarks != null">
+        ap_remarks = #{apRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="apOperator != null">
+        ap_operator = #{apOperator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ap_id = #{apId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.entity.AccountsPayable">
+    update accounts_payable
+    set ap_stime = #{apStime,jdbcType=TIMESTAMP},
+      SupplierName = #{suppliername,jdbcType=VARCHAR},
+      Supp_Id = #{suppId,jdbcType=INTEGER},
+      ap_owe = #{apOwe,jdbcType=DECIMAL},
+      ap_payment = #{apPayment,jdbcType=DECIMAL},
+      ap_owes = #{apOwes,jdbcType=DECIMAL},
+      ap_agent = #{apAgent,jdbcType=VARCHAR},
+      ap_remarks = #{apRemarks,jdbcType=VARCHAR},
+      ap_operator = #{apOperator,jdbcType=VARCHAR}
+    where ap_id = #{apId,jdbcType=INTEGER}
+  </update>
+  <select id="finAllaccp" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from accounts_payable
+  </select>
+  <select id="findAllLikes" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from accounts_payable
+    where 1=1
+    <if test="SupplierName != null and SupplierName !=''">
+      and SupplierName like concat('%', #{SupplierName},jdbcType=VARCHAR} '%')
+    </if>
+  </select>
+  <!--模糊分页查询-->
+  <select id="findAllLike" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from accounts_payable
+    where TimeLiness=0
+    <if test="SupplierName!=null">
+      AND SupplierName like CONCAT('%',#{connectionName,jdbcType=VARCHAR},'%')
+    </if>
+    order by ap_id desc
+  </select>
+</mapper>

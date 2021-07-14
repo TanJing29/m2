@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.medical_care_after.dao.ConnectionDao">
+  <resultMap id="BaseResultMap" type="com.trkj.medical_care_after.vo.ConnectionVo">
+    <id column="Con_Id" jdbcType="INTEGER" property="conId" />
+    <result column="Connection_Id" jdbcType="VARCHAR" property="connectionId" />
+    <result column="Connection_Name" jdbcType="VARCHAR" property="connectionName" />
+    <result column="LiaisonMan" jdbcType="VARCHAR" property="liaisonman" />
+    <result column="Phone" jdbcType="VARCHAR" property="phone" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="Remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="Addname" jdbcType="VARCHAR" property="addname" />
+    <result column="AddTime" jdbcType="TIMESTAMP" property="addtime" />
+    <result column="UpdateName" jdbcType="VARCHAR" property="updatename" />
+    <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="DeleteName" jdbcType="VARCHAR" property="deletename" />
+    <result column="DeleteTime" jdbcType="TIMESTAMP" property="deletetime" />
+    <result column="TimeLiness" jdbcType="INTEGER" property="timeliness" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Con_Id, Connection_Id, `Connection_Name`, LiaisonMan, Phone, Address, Remarks, Addname, 
+    AddTime, UpdateName, UpdateTime, DeleteName, DeleteTime, TimeLiness
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from connection
+    where Con_Id = #{conId,jdbcType=INTEGER}
+  </select>
+  <!--查询-->
+    <select id="selConnection" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from connection
+      where TimeLiness=0
+    </select>
+  <!--模糊分页查询-->
+  <select id="selmhConnection" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from connection
+    where TimeLiness=0
+    <if test="connectionName!=null">
+      AND Connection_Name like CONCAT('%',#{connectionName,jdbcType=VARCHAR},'%')
+    </if>
+    order by Con_Id desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from connection
+    where Con_Id = #{conId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="Con_Id" keyProperty="conId" parameterType="com.trkj.medical_care_after.vo.ConnectionVo" useGeneratedKeys="true">
+    insert into connection (Connection_Id, `Connection_Name`, LiaisonMan, 
+      Phone, Address, Remarks, 
+      Addname, AddTime, UpdateName, 
+      UpdateTime, DeleteName, DeleteTime, 
+      TimeLiness)
+    values (#{connectionId,jdbcType=VARCHAR}, #{connectionName,jdbcType=VARCHAR}, #{liaisonman,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{addname,jdbcType=VARCHAR}, #{addtime,jdbcType=TIMESTAMP}, #{updatename,jdbcType=VARCHAR}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{deletename,jdbcType=VARCHAR}, #{deletetime,jdbcType=TIMESTAMP}, 
+      #{timeliness,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="Con_Id" keyProperty="conId" parameterType="com.trkj.medical_care_after.vo.ConnectionVo" useGeneratedKeys="true">
+    insert into connection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="connectionId != null">
+        Connection_Id,
+      </if>
+      <if test="connectionName != null">
+        `Connection_Name`,
+      </if>
+      <if test="liaisonman != null">
+        LiaisonMan,
+      </if>
+      <if test="phone != null">
+        Phone,
+      </if>
+      <if test="address != null">
+        Address,
+      </if>
+      <if test="remarks != null">
+        Remarks,
+      </if>
+      <if test="addname != null">
+        Addname,
+      </if>
+      <if test="addtime != null">
+        AddTime,
+      </if>
+      <if test="updatename != null">
+        UpdateName,
+      </if>
+      <if test="updatetime != null">
+        UpdateTime,
+      </if>
+      <if test="deletename != null">
+        DeleteName,
+      </if>
+      <if test="deletetime != null">
+        DeleteTime,
+      </if>
+      <if test="timeliness != null">
+        TimeLiness,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="connectionId != null">
+        #{connectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionName != null">
+        #{connectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="liaisonman != null">
+        #{liaisonman,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="addname != null">
+        #{addname,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null">
+        #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatename != null">
+        #{updatename,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletename != null">
+        #{deletename,jdbcType=VARCHAR},
+      </if>
+      <if test="deletetime != null">
+        #{deletetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeliness != null">
+        #{timeliness,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.medical_care_after.vo.ConnectionVo">
+    update connection
+    <set>
+      <if test="connectionId != null">
+        Connection_Id = #{connectionId,jdbcType=VARCHAR},
+      </if>
+      <if test="connectionName != null">
+        `Connection_Name` = #{connectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="liaisonman != null">
+        LiaisonMan = #{liaisonman,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        Phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        Address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        Remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="addname != null">
+        Addname = #{addname,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null">
+        AddTime = #{addtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatename != null">
+        UpdateName = #{updatename,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deletename != null">
+        DeleteName = #{deletename,jdbcType=VARCHAR},
+      </if>
+      <if test="deletetime != null">
+        DeleteTime = #{deletetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeliness != null">
+        TimeLiness = #{timeliness,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Con_Id = #{conId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.medical_care_after.vo.ConnectionVo">
+    update connection
+    set Connection_Id = #{connectionId,jdbcType=VARCHAR},
+      `Connection_Name` = #{connectionName,jdbcType=VARCHAR},
+      LiaisonMan = #{liaisonman,jdbcType=VARCHAR},
+      Phone = #{phone,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      Remarks = #{remarks,jdbcType=VARCHAR},
+      Addname = #{addname,jdbcType=VARCHAR},
+      AddTime = #{addtime,jdbcType=TIMESTAMP},
+      UpdateName = #{updatename,jdbcType=VARCHAR},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      DeleteName = #{deletename,jdbcType=VARCHAR},
+      DeleteTime = #{deletetime,jdbcType=TIMESTAMP},
+      TimeLiness = #{timeliness,jdbcType=INTEGER}
+    where Con_Id = #{conId,jdbcType=INTEGER}
+  </update>
+</mapper>
